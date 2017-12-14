@@ -5,14 +5,23 @@ function Scripts() {
 
 function OnItemMove(left, top) {
   document.getElementById('testt').innerHTML = left
-  if(left > 140) {
+  let LastMadeKerstbal = 0
+  for(let i = 0; i < 20; i++) {
+    if(document.getElementById('kerstbal - ' + i) !== null) {
+      LastMadeKerstbal = i
+    }
+  }
+  const LeftProp = window.getComputedStyle(document.getElementById('kerstbal - ' + LastMadeKerstbal), null)['left'].replace('px', '')
+  if(parseInt(LeftProp) > 140) {
     for(let i = 0; i < 20; i++) {
       if(document.getElementById('kerstbal - ' + i) == undefined) {
+        console.log('Nieuwe kerstbal gemaakt')
         const NewKerstbal = document.createElement('img')
         NewKerstbal.setAttribute('style', 'position: absolute; left: 0; width: 100; height: 100; cursor: move; user-drag: none;')
         NewKerstbal.src = 'https://gyazo.com/78287b22af92bded0feb779cea167727.png'
         NewKerstbal.id = 'kerstbal - ' + i
         document.getElementById('LeftPanel').appendChild(NewKerstbal)
+        MaakSleepBaar()
         return
       }
     }
@@ -21,8 +30,7 @@ function OnItemMove(left, top) {
 
 function MaakSleepBaar() {
   for(let i = 0; i < 20; i++) {
-    console.log(document.getElementById('kerstbal - ' + i))
-    if(document.getElementById('kerstbal - ' + i) !== undefined) {
+    if(document.getElementById('kerstbal - ' + i) !== null) {
       const kerstbal = document.getElementById('kerstbal - ' + i)
       kerstbal.onmousedown = function() { MouseDown(kerstbal) }
     }
