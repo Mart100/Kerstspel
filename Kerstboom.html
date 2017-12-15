@@ -2,13 +2,15 @@
   <head>
     <script src="Scripts.js"></script>
   </head>
-  <body style="margin: 0;" onload="Scripts();">
-    <img src="https://gyazo.com/bade511507de3129830dc7cb7771d699.jpg" alt="Kerstboom" style="position: absolute; left: 250px; width:60%; height:100%"/>
+  <body style="margin: 0;" onload="Scripts();" id="body">
+    <img src="https://media.giphy.com/media/lDKVeTHWDPSuc/giphy.gif" alt="Falling snow" style="position: absolute; width: 100%; height: 100%; Display: none;" id="SneeuwAnimatie"/>
+    <img src="https://gyazo.com/a64897e3f9846222160003272e2282c0.png" alt="Kerstboom" style="position: absolute; left: 7%; height:100%; width: 85%; "/>
     <a id="testt">BEGIN</a>
     <div style="position: absolute; left: 0; width: 150px; height: 100%; background-color: #eaeaea" id="LeftPanel">
-      <img src="https://gyazo.com/78287b22af92bded0feb779cea167727.png" style="position: absolute; left: 0; width: 100; height: 100; cursor: move; user-drag: none;" id="kerstbal - 0"/>
+      <img src="https://gyazo.com/78287b22af92bded0feb779cea167727.png" style="position: absolute; left: 15%; top: 10px; width: 100; height: 100; cursor: move; user-drag: none;" id="kerstbal - 0" contextmenu=""/>
     </div>
     <div style="position: absolute; right: 0; width: 150px; height: 100%; background-color: #eaeaea" id="RightPanel">
+      <img src="http://www.sweet16feest.nl/wp-content/uploads/2015/10/sneeuwvlokwit.jpg" style="position: absolute; left: 20%; bottom: 5%; width: 100; height: 100; cursor: pointer; border-radius: 20%;" id="SneewKnop" onclick="CLICKsnow()"/>
 
     </div>
   </body>
