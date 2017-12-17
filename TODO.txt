@@ -4,3 +4,5 @@ Other items = Slingers - lights
 Moving Snow background
 BugFixes
 Names
+Lichtjes aan/uit
+Comments
