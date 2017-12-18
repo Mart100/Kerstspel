@@ -5,26 +5,40 @@ function Scripts() {
 
 }
 
-function OnItemMove(left, top) {
+function OnItemMove(item, left, top) {
+  const ItemType = item.id.split(' ')[0]
   document.getElementById('testt').innerHTML = left
-  let LastMadeKerstbal = 0
+  let LastMadeItem = 0
   for(let i = 0; i < 20; i++) {
-    if(document.getElementById('kerstbal - ' + i) !== null) {
-      LastMadeKerstbal = i
+    if(document.getElementById(ItemType + ' - ' + i) !== null) {
+      LastMadeItem = i
     }
   }
-  const LeftProp = window.getComputedStyle(document.getElementById('kerstbal - ' + LastMadeKerstbal), null)['left'].replace('px', '')
+  const LeftProp = window.getComputedStyle(document.getElementById(ItemType + ' - ' + LastMadeItem), null)['left'].replace('px', '')
   if(parseInt(LeftProp) > 140) {
     for(let i = 0; i < 50; i++) {
-      if(document.getElementById('kerstbal - ' + i) == undefined) {
-        console.log('Nieuwe kerstbal gemaakt')
-        const NewKerstbal = document.createElement('img')
-        NewKerstbal.setAttribute('style', 'position: absolute; left: 0; width: 100; height: 100; cursor: move; user-drag: none;')
-        NewKerstbal.src = 'https://gyazo.com/78287b22af92bded0feb779cea167727.png'
-        NewKerstbal.id = 'kerstbal - ' + i
-        NewKerstbal.oncontextmenu = function() { OpenMenu(NewKerstbal) }
-        document.getElementById('LeftPanel').appendChild(NewKerstbal)
+      if(document.getElementById(ItemType + ' - ' + i) == undefined) {
+        console.log('Nieuwe ' + ItemType + ' gemaakt')
+        const NewItem = document.createElement('img')
+        // Set Style of new item
+        if(ItemType == 'kerstbal') NewItem.setAttribute('style', 'position: absolute; left: 15%; top: 2%; width: 100; height: 100; cursor: move; user-drag: none;')
+        if(ItemType == 'slinger') NewItem.setAttribute('style', 'position: absolute; left: 15%; top: 15%; width: 100; height: 100; cursor: move; user-drag: none;')
+        // Set Image of new item
+        if(ItemType == 'kerstbal') NewItem.src = 'https://gyazo.com/78287b22af92bded0feb779cea167727.png'
+        if(ItemType == 'slinger') NewItem.src = 'https://gyazo.com/9c637de06cbd7bade0f086c38cc03e6d.png'
+        // Set ID of new item
+        NewItem.id = ItemType + ' - ' + i
+        // Assign functions to new item
+        if(ItemType == 'kerstbal') NewItem.oncontextmenu = function() { OpenMenu(NewItem) }
+        // Add item to LeftPanel
+        document.getElementById('LeftPanel').appendChild(NewItem)
         MaakSleepBaar()
+        if(ItemType == 'slinger') {
+          item.src = 'https://gyazo.com/726f2fd48154f6dafa063badbf7032ec.png'
+          item.style.width = 550
+          item.style.height = 150
+          item.id = 'KerstLichtjes'
+        }
         return
       }
     }
@@ -38,30 +52,36 @@ function MaakSleepBaar() {
       kerstbal.onmousedown = function() { MouseDown(kerstbal) }
     }
   }
+  for(let i = 0; i < 50; i++) {
+    if(document.getElementById('slinger - ' + i) !== null) {
+      const slinger = document.getElementById('slinger - ' + i)
+      slinger.onmousedown = function() { MouseDown(slinger) }
+    }
+  }
 }
 
-function MouseUp(kerstbal) {
-  kerstbal.onmousemove = ''
+function MouseUp(item) {
+  item.onmousemove = ''
 }
 
-function MouseDown(kerstbal) {
-  kerstbal.onmousemove = function() { Move(kerstbal) }
-  kerstbal.onmouseup = function() { MouseUp(kerstbal) }
+function MouseDown(item) {
+  item.onmousemove = function() { Move(item) }
+  item.onmouseup = function() { MouseUp(item) }
 }
 
-function Move(kerstbal) {
-  const SizeOfBall = parseInt(window.getComputedStyle(kerstbal, null)['height'].replace('px', ''))
+function Move(item) {
+  const SizeOfBall = parseInt(window.getComputedStyle(item, null)['height'].replace('px', ''))
   const offset = SizeOfBall / 2
   console.log(offset)
-  OnItemMove(event.clientX - offset, event.clientY - offset)
-  kerstbal.style.left = event.clientX - offset
-  kerstbal.style.top = event.clientY - (offset + offset / 2)
-  kerstbal.draggable = false
+  OnItemMove(item, event.clientX - offset, event.clientY - offset)
+  item.style.left = event.clientX - offset
+  item.style.top = event.clientY - (offset + offset / 2)
+  item.draggable = false
 }
 
-function StopMove(kerstbal) {
-  kerstbal.onmouseup = null
-  kerstbal.onmousedown = null
+function StopMove(item) {
+  item.onmouseup = null
+  item.onmousedown = null
 }
 
 function CLICKsnow() {
@@ -186,4 +206,13 @@ function RemoveChanceSize() {
     const RCsizemenu = document.getElementById('RCsizemenu')
     RCsizemenu.parentNode.removeChild(RCsizemenu)
   }
+}
+function CLICKlight() {
+  const LichtKnop = document.getElementById('LichtKnop')
+  const LichtAnimatie = document.getElementById('KerstLichtjes')
+  if(LichtAnimatie.src == 'https://gyazo.com/47d3ca9d60b6a20342d29acefa92ecfd.png') {
+   LichtAnimatie.src = 'https://gyazo.com/726f2fd48154f6dafa063badbf7032ec.png'
+ } else {
+  LichtAnimatie.src = 'https://gyazo.com/47d3ca9d60b6a20342d29acefa92ecfd.png'
+ }
 }
