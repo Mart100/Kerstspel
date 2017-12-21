@@ -1,13 +1,38 @@
+let Storage = { 'buttons': { 'lightSwitch': { 'on': false }, 'snowSwitch': { 'on': true }, 'daySwitch': { 'on': true } } }
+let XposKerstslee = 0
+let ForwardKerstslee = true
 function Scripts() {
   MaakSleepBaar()
+  KerstsleeStart()
   document.getElementById('kerstbal - 0').oncontextmenu = function() { OpenMenu(document.getElementById('kerstbal - 0')) }
   document.addEventListener('contextmenu', event => event.preventDefault());
+  document.getElementById('Songs').play()
 
+}
+
+function KerstsleeStart() {
+  const Kerstslee = document.getElementById('Kerstslee')
+  document.getElementById('body').appendChild(Kerstslee)
+  setInterval(function() {
+  MoveKerstslee(Kerstslee)
+    }, 10)
+}
+function MoveKerstslee(Kerstslee) {
+  if(XposKerstslee > 1200) {
+    Kerstslee.style.transform = 'scaleX(1)'
+    ForwardKerstslee = false
+  }
+  if(XposKerstslee < 200) {
+    Kerstslee.style.transform = 'scaleX(-1)'
+    ForwardKerstslee = true
+  }
+  if(ForwardKerstslee) XposKerstslee = XposKerstslee + 1
+  if(!ForwardKerstslee) XposKerstslee = XposKerstslee - 1
+  Kerstslee.style.left = XposKerstslee
 }
 
 function OnItemMove(item, left, top) {
   const ItemType = item.id.split(' ')[0]
-  document.getElementById('testt').innerHTML = left
   let LastMadeItem = 0
   for(let i = 0; i < 20; i++) {
     if(document.getElementById(ItemType + ' - ' + i) !== null) {
@@ -34,9 +59,11 @@ function OnItemMove(item, left, top) {
         document.getElementById('LeftPanel').appendChild(NewItem)
         MaakSleepBaar()
         if(ItemType == 'slinger') {
-          item.src = 'Pictures/Slingers/Normaal-Uit.png'
-          item.style.width = 550
-          item.style.height = 150
+          // If the Lightbutton is on/off
+          if(Storage.buttons.lightSwitch.on) item.src = 'Assets/Slingers/Normaal-Aan.png'
+          if(!Storage.buttons.lightSwitch.on) item.src = 'Assets/Slingers/Normaal-Uit.png'
+          item.style.width = 380
+          item.style.height = 125
           item.oncontextmenu = function() { OpenMenu(item) }
         }
         return
@@ -46,12 +73,14 @@ function OnItemMove(item, left, top) {
 }
 
 function MaakSleepBaar() {
+  // SleepBaar voor kerstballen
   for(let i = 0; i < 50; i++) {
     if(document.getElementById('kerstbal - ' + i) !== null) {
       const kerstbal = document.getElementById('kerstbal - ' + i)
       kerstbal.onmousedown = function() { MouseDown(kerstbal) }
     }
   }
+  // SleepBaar voor slingers
   for(let i = 0; i < 50; i++) {
     if(document.getElementById('slinger - ' + i) !== null) {
       const slinger = document.getElementById('slinger - ' + i)
@@ -60,22 +89,24 @@ function MaakSleepBaar() {
   }
 }
 
-function MouseUp(item) {
-  item.onmousemove = ''
+function MouseUp() {
+  document.getElementById('body').onmousemove = ''
 }
 
 function MouseDown(item) {
-  item.onmousemove = function() { Move(item) }
-  item.onmouseup = function() { MouseUp(item) }
+  // Calculate offset from mouse and item
+  const offsetX = event.clientX - parseInt(window.getComputedStyle(item, null)['left'].replace('px', ''))
+  const offsetY = event.clientY - parseInt(window.getComputedStyle(item, null)['top'].replace('px', ''))
+
+  document.getElementById('body').onmousemove = function() { Move(item, offsetX, offsetY) }
+  item.onmouseup = function() { MouseUp() }
 }
 
-function Move(item) {
-  const SizeOfBall = parseInt(window.getComputedStyle(item, null)['height'].replace('px', ''))
-  const offset = SizeOfBall / 2
-  console.log(offset)
-  OnItemMove(item, event.clientX - offset, event.clientY - offset)
-  item.style.left = event.clientX - offset
-  item.style.top = event.clientY - (offset + offset / 2)
+function Move(item, offsetX, offsetY) {
+  document.getElementById('testt').innerHTML = 'Mouse = Y: ' + event.clientY + ' X: ' + event.clientX + '\nItem = Y: ' + offsetY + ' X: ' + offsetX
+  OnItemMove(item, event.clientX - offsetX, event.clientY - offsetY)
+  item.style.left = event.clientX - offsetX
+  item.style.top = event.clientY - offsetY
   item.draggable = false
 }
 
@@ -169,10 +200,10 @@ function ChanceColorKerstbal(WelkeKerstbal, Ypos, Xpos) {
     // Create the DIV element button
     RCmenubuttons = document.createElement('div')
     // Set event click of buttoninformation
-    if(i === 1) RCmenubuttons.onclick = function() { WelkeKerstbal.src = 'Pictures/Kerstballen/Rood.png'; RemoveChanceColor();}
-    if(i === 2) RCmenubuttons.onclick = function() { WelkeKerstbal.src = 'Pictures/Kerstballen/Groen.png'; RemoveChanceColor();}
-    if(i === 3) RCmenubuttons.onclick = function() { WelkeKerstbal.src = 'Pictures/Kerstballen/Blauw.png'; RemoveChanceColor();}
-    if(i === 4) RCmenubuttons.onclick = function() { WelkeKerstbal.src = 'Pictures/Kerstballen/Goud.png'; RemoveChanceColor();}
+    if(i === 1) RCmenubuttons.onclick = function() { WelkeKerstbal.src = 'Assets/Kerstballen/Rood.png'; RemoveChanceColor();}
+    if(i === 2) RCmenubuttons.onclick = function() { WelkeKerstbal.src = 'Assets/Kerstballen/Groen.png'; RemoveChanceColor();}
+    if(i === 3) RCmenubuttons.onclick = function() { WelkeKerstbal.src = 'Assets/Kerstballen/Blauw.png'; RemoveChanceColor();}
+    if(i === 4) RCmenubuttons.onclick = function() { WelkeKerstbal.src = 'Assets/Kerstballen/Goud.png'; RemoveChanceColor();}
 
     RCmenubuttons.innerHTML = buttoninformation
     RCcolormenu.appendChild(RCmenubuttons)
@@ -224,16 +255,18 @@ function SetItemSize(item, size) {
     }
   }
   if(ItemType == 'slinger') {
-    const AanOfUit = item.src.replace('Pictures/Slingers/', '').replace('.png', '').split('-')[1]
-    if(AanOfUit == 'Aan') {
-      if(size == 'klein') { item.src = 'Pictures/Slingers/Kort-Aan.png'; item.style.width = '200'; item.style.height = '100'}
-      if(size == 'normaal') { item.src = 'Pictures/Slingers/Normaal-Aan.png'; item.style.width = '300'; item.style.height = '125'}
-      if(size == 'groot') { item.src = 'Pictures/Slingers/Lang-Aan.png'; item.style.width = '500'; item.style.height = '150'}
+    const AanOfUit = Storage.buttons.lightSwitch.on
+    // If lightButton is ON
+    if(AanOfUit) {
+      if(size == 'klein') { item.src = 'Assets/Slingers/Kort-Aan.png'; item.style.width = '250'; item.style.height = '110'}
+      if(size == 'normaal') { item.src = 'Assets/Slingers/Normaal-Aan.png'; item.style.width = '380'; item.style.height = '125'}
+      if(size == 'groot') { item.src = 'Assets/Slingers/Lang-Aan.png'; item.style.width = '550'; item.style.height = '150'}
     }
-    if(AanOfUit == 'Uit') {
-      if(size == 'klein') { item.src = 'Pictures/Slingers/Kort-Uit.png'; item.style.width = '200'; item.style.height = '100'}
-      if(size == 'normaal') { item.src = 'Pictures/Slingers/Normaal-Uit.png'; item.style.width = '300'; item.style.height = '125'}
-      if(size == 'groot') { item.src = 'Pictures/Slingers/Lang-Uit.png'; item.style.width = '500'; item.style.height = '150'}
+    // If lightButton is OFF
+    if(!AanOfUit) {
+      if(size == 'klein') { item.src = 'Assets/Slingers/Kort-Uit.png'; item.style.width = '250'; item.style.height = '110'}
+      if(size == 'normaal') { item.src = 'Assets/Slingers/Normaal-Uit.png'; item.style.width = '380'; item.style.height = '125'}
+      if(size == 'groot') { item.src = 'Assets/Slingers/Lang-Uit.png'; item.style.width = '550'; item.style.height = '150'}
     }
   }
 }
@@ -256,24 +289,39 @@ function CLICKlight() {
   const LichtKnop = document.getElementById('LichtKnop')
   let item
   let size
-  let AanOfUit
+  const Aan = Storage.buttons.lightSwitch.on
   for(let i = 0; i < 20; i++) {
     if(document.getElementById('slinger - ' + i) !== null) {
       item = document.getElementById('slinger - ' + i)
-      size = item.src.replace('file:///C:/Users/martv/Documents/Programming/Websites/kerstmiswebsite/Pictures/Slingers/', '').replace('.png', '').split('-')[0]
-      AanOfUit = item.src.replace('Pictures/Slingers/', '').replace('.png', '').split('-')[1]
-      console.log(AanOfUit + ' -- ' + size)
-      if(AanOfUit == 'Uit') {
-        if(size == 'Kort') { item.src = 'Pictures/Slingers/Kort-Aan.png'}
-        if(size == 'Normaal') { item.src = 'Pictures/Slingers/Normaal-Aan.png'}
-        if(size == 'Lang') { item.src = 'Pictures/Slingers/Lang-Aan.png'}
+      size = item.src.replace('file:///C:/Users/martv/Documents/Programming/Websites/kerstmiswebsite/Assets/Slingers/', '').replace('.png', '').split('-')[0]
+      console.log(Aan + ' -- ' + size)
+      if(Aan == false) {
+        if(size == 'Kort') { item.src = 'Assets/Slingers/Kort-Aan.png'}
+        if(size == 'Normaal') { item.src = 'Assets/Slingers/Normaal-Aan.png'}
+        if(size == 'Lang') { item.src = 'Assets/Slingers/Lang-Aan.png'}
       }
-      if(AanOfUit == 'Aan') {
-        if(size == 'Kort') { item.src = 'Pictures/Slingers/Kort-Uit.png'}
-        if(size == 'Normaal') { item.src = 'Pictures/Slingers/Normaal-Uit.png'}
-        if(size == 'Lang') { item.src = 'Pictures/Slingers/Lang-Uit.png'}
+      if(Aan == true) {
+        if(size == 'Kort') { item.src = 'Assets/Slingers/Kort-Uit.png'}
+        if(size == 'Normaal') { item.src = 'Assets/Slingers/Normaal-Uit.png'}
+        if(size == 'Lang') { item.src = 'Assets/Slingers/Lang-Uit.png'}
       }
 
-    } else { return }
+    } else {
+      if(Aan) Storage.buttons.lightSwitch.on = false
+      if(!Aan) Storage.buttons.lightSwitch.on = true
+      return
+    }
+  }
+}
+
+function CLICKday() {
+  console.log(Storage.buttons.daySwitch.on)
+  if(Storage.buttons.daySwitch.on) {
+    Storage.buttons.daySwitch.on = false
+    document.getElementById('KerstboomAchtergrond').src = 'Assets/Backgrounds/Night.jpg'
+  }
+  else {
+    Storage.buttons.daySwitch.on = true
+    document.getElementById('KerstboomAchtergrond').src = 'Assets/Backgrounds/Day.png'
   }
 }
