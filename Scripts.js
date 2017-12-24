@@ -1,12 +1,13 @@
-let Storage = { 'buttons': { 'lightSwitch': { 'on': false }, 'snowSwitch': { 'on': true }, 'daySwitch': { 'on': true } } }
+let Storage = { 'buttons': { 'lightSwitch': { 'on': false }, 'snowSwitch': { 'on': true }, 'daySwitch': { 'on': true } }, 'music': { 'CurrentSong': '1-JingleBells', 'OnPause': true, 'songs': { } } }
 let XposKerstslee = 0
 let ForwardKerstslee = true
+const ScreenWidth = window.innerWidth
+const ScreenHeight = window.innerHeight
 function Scripts() {
   MaakSleepBaar()
   KerstsleeStart()
   document.getElementById('kerstbal - 0').oncontextmenu = function() { OpenMenu(document.getElementById('kerstbal - 0')) }
   document.addEventListener('contextmenu', event => event.preventDefault());
-  document.getElementById('Songs').play()
 
 }
 
@@ -17,6 +18,7 @@ function KerstsleeStart() {
   MoveKerstslee(Kerstslee)
     }, 10)
 }
+
 function MoveKerstslee(Kerstslee) {
   if(XposKerstslee > 1200) {
     Kerstslee.style.transform = 'scaleX(1)'
@@ -319,9 +321,73 @@ function CLICKday() {
   if(Storage.buttons.daySwitch.on) {
     Storage.buttons.daySwitch.on = false
     document.getElementById('KerstboomAchtergrond').src = 'Assets/Backgrounds/Night.jpg'
+    document.getElementById('DagKnop').src = 'Assets/Icons/Sun.png'
   }
   else {
     Storage.buttons.daySwitch.on = true
     document.getElementById('KerstboomAchtergrond').src = 'Assets/Backgrounds/Day.png'
+    document.getElementById('DagKnop').src = 'Assets/Icons/Moon.png'
   }
+}
+
+function CLICKmusic() {
+  const Music = document.getElementById('Songs')
+  // Create BOX for music edit
+  const MusicPopup = document.createElement('div')
+  MusicPopup.setAttribute('style', 'position: absolute; right: 10%; bottom: 50%; top: 20%; left: -80%; border-radius: 10px; background-color: white; box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);')
+
+  // Create Exit button
+  const ExitButton = document.createElement('img')
+  ExitButton.src = 'Assets/Icons/Exit.png'
+  ExitButton.setAttribute('style', 'position: absolute; right: 0; top: 0; border-radius: 10px; width: 35; height: 35; cursor: pointer;')
+  ExitButton.onclick = function() { MusicPopup.parentNode.removeChild(MusicPopup)}
+  // Creates Duration Text
+  const DurationTEXT = document.createElement('a')
+  DurationTEXT.setAttribute('style', 'position: absolute; top: 5px; left: 5px; font-size: 30px;')
+  DurationTEXT.innerHTML = '0:00'
+  DurationTEXT.id = 'DurationTEXT'
+
+  // Create BUTTON holder
+  const ButtonHolder = document.createElement('div')
+  ButtonHolder.setAttribute('style', 'position: absolute; bottom: 5%; left: 5%; right: 5%; height: 50; border-radius: 10px; background-color: #dbecff')
+  // Create PAUSE button
+  const PauseButton = document.createElement('img')
+  PauseButton.setAttribute('style', 'position: absolute; width: 35; height: 35; cursor: pointer; margin: auto; top: 0; left: 0; bottom: 0; right: 0;')
+  if(Storage.music.OnPause) PauseButton.src = 'Assets/Icons/Music/Play.png'
+  if(!Storage.music.OnPause) PauseButton.src = 'Assets/Icons/Music/Pause.png'
+  PauseButton.onmouseover = function() { PauseButton.style.width = 38; PauseButton.style.height = 38 }
+  PauseButton.onmouseleave = function() { PauseButton.style.width = 35; PauseButton.style.height = 35 }
+  PauseButton.onclick = function() {
+    if(Storage.music.OnPause) {
+      Storage.music.OnPause = false
+      PauseButton.src = 'Assets/Icons/Music/Pause.png'
+      document.getElementById('SongsAudio').play()
+
+    } else {
+      Storage.music.OnPause = true
+      PauseButton.src = 'Assets/Icons/Music/Play.png'
+      document.getElementById('SongsAudio').pause()
+    }
+  }
+  // Add stuff to the BOX
+  ButtonHolder.appendChild(PauseButton)
+  MusicPopup.appendChild(DurationTEXT)
+  MusicPopup.appendChild(ButtonHolder)
+  MusicPopup.appendChild(ExitButton)
+  document.getElementById('RightPanel').appendChild(MusicPopup)
+  setInterval(MusicStatus, 500)
+}
+
+function MusicStatus() {
+  let SongSeconds = Math.round(document.getElementById('SongsAudio').currentTime)
+  let SongMinutes
+  if(SongSeconds - 60 < 0) {
+    document.getElementById('DurationTEXT').innerHTML = '0:' + SongSeconds
+    return
+  }
+  for(SongMinutes = 0; SongMinutes < 1e2; SongMinutes++) {
+    if(SongSeconds < 0) break
+    SongSeconds -= 60
+  }
+  document.getElementById('DurationTEXT').innerHTML = SongMinutes + ':' + SongSeconds
 }
