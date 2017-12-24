@@ -1,5 +1,6 @@
 let Storage = { 'buttons': { 'lightSwitch': { 'on': false }, 'snowSwitch': { 'on': true }, 'daySwitch': { 'on': true } }, 'music': { 'CurrentSong': '1-JingleBells', 'OnPause': true, 'songs': { } } }
 let XposKerstslee = 0
+let WidthStop
 let ForwardKerstslee = true
 const ScreenWidth = window.innerWidth
 const ScreenHeight = window.innerHeight
@@ -16,15 +17,17 @@ function KerstsleeStart() {
   document.getElementById('body').appendChild(Kerstslee)
   setInterval(function() {
   MoveKerstslee(Kerstslee)
-    }, 10)
+    }, 1)
 }
 
 function MoveKerstslee(Kerstslee) {
-  if(XposKerstslee > 1200) {
+  WidthStop = ScreenWidth - ScreenWidth / 5
+  if(XposKerstslee > WidthStop) {
     Kerstslee.style.transform = 'scaleX(1)'
     ForwardKerstslee = false
   }
-  if(XposKerstslee < 200) {
+  if(XposKerstslee < 150) {
+    XposKerstslee = 150
     Kerstslee.style.transform = 'scaleX(-1)'
     ForwardKerstslee = true
   }
@@ -105,7 +108,6 @@ function MouseDown(item) {
 }
 
 function Move(item, offsetX, offsetY) {
-  document.getElementById('testt').innerHTML = 'Mouse = Y: ' + event.clientY + ' X: ' + event.clientX + '\nItem = Y: ' + offsetY + ' X: ' + offsetX
   OnItemMove(item, event.clientX - offsetX, event.clientY - offsetY)
   item.style.left = event.clientX - offsetX
   item.style.top = event.clientY - offsetY
@@ -381,13 +383,11 @@ function CLICKmusic() {
 function MusicStatus() {
   let SongSeconds = Math.round(document.getElementById('SongsAudio').currentTime)
   let SongMinutes
-  if(SongSeconds - 60 < 0) {
-    document.getElementById('DurationTEXT').innerHTML = '0:' + SongSeconds
-    return
-  }
   for(SongMinutes = 0; SongMinutes < 1e2; SongMinutes++) {
-    if(SongSeconds < 0) break
+    if(SongSeconds < 60) break
     SongSeconds -= 60
   }
-  document.getElementById('DurationTEXT').innerHTML = SongMinutes + ':' + SongSeconds
+  let zero = ''
+  if(SongSeconds < 10) zero = '0'
+  document.getElementById('DurationTEXT').innerHTML = SongMinutes + ':' + zero + SongSeconds
 }
