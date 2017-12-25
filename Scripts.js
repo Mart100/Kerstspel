@@ -293,11 +293,13 @@ function CLICKlight() {
   const LichtKnop = document.getElementById('LichtKnop')
   let item
   let size
+  let TempArray
   const Aan = Storage.buttons.lightSwitch.on
   for(let i = 0; i < 20; i++) {
     if(document.getElementById('slinger - ' + i) !== null) {
       item = document.getElementById('slinger - ' + i)
-      size = item.src.split('-')[0].split('/').pop()
+      TempArray = item.src.split('-')[0].split('/')
+      size = TempArray[TempArray.length - 1]
       console.log(Aan + ' -- ' + size)
       if(Aan == false) {
         if(size == 'Kort') { item.src = 'Assets/Slingers/Kort-Aan.png'}
