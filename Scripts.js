@@ -1,4 +1,4 @@
-let Storage = { 'buttons': { 'lightSwitch': { 'on': false }, 'snowSwitch': { 'on': true }, 'daySwitch': { 'on': true } }, 'music': { 'CurrentSong': '1-JingleBells', 'OnPause': true, 'songs': { } } }
+let Storage = { 'buttons': { 'lightSwitch': { 'on': false }, 'snowSwitch': { 'on': true }, 'daySwitch': { 'on': true } }, 'music': { 'CurrentSong': '1-JingleBells', 'OnPause': true, 'songs': [{ }] } }
 let XposKerstslee = 0
 let WidthStop
 let ForwardKerstslee = true
@@ -297,7 +297,7 @@ function CLICKlight() {
   for(let i = 0; i < 20; i++) {
     if(document.getElementById('slinger - ' + i) !== null) {
       item = document.getElementById('slinger - ' + i)
-      size = item.src.replace('file:///C:/Users/martv/Documents/Programming/Websites/kerstmiswebsite/Assets/Slingers/', '').replace('.png', '').split('-')[0]
+      size = item.src.split('-')[0].split('/').pop()
       console.log(Aan + ' -- ' + size)
       if(Aan == false) {
         if(size == 'Kort') { item.src = 'Assets/Slingers/Kort-Aan.png'}
@@ -343,15 +343,23 @@ function CLICKmusic() {
   ExitButton.src = 'Assets/Icons/Exit.png'
   ExitButton.setAttribute('style', 'position: absolute; right: 0; top: 0; border-radius: 10px; width: 35; height: 35; cursor: pointer;')
   ExitButton.onclick = function() { MusicPopup.parentNode.removeChild(MusicPopup)}
+
   // Creates Duration Text
   const DurationTEXT = document.createElement('a')
-  DurationTEXT.setAttribute('style', 'position: absolute; top: 5px; left: 5px; font-size: 30px;')
+  DurationTEXT.setAttribute('style', 'position: absolute; top: 40px; left: 5px; font-size: 30px;')
   DurationTEXT.innerHTML = '0:00'
   DurationTEXT.id = 'DurationTEXT'
+
+  // Create Playing text
+  const PlayingTEXT = document.createElement('a')
+  PlayingTEXT.setAttribute('style', 'position: absolute; top: 5px; left: 5px; font-size: 20px;')
+  PlayingTEXT.innerHTML = 'Playing: ' + Storage.music.CurrentSong.split('-')[1]
+  PlayingTEXT.id = 'PlayingTEXT'
 
   // Create BUTTON holder
   const ButtonHolder = document.createElement('div')
   ButtonHolder.setAttribute('style', 'position: absolute; bottom: 5%; left: 5%; right: 5%; height: 50; border-radius: 10px; background-color: #dbecff')
+
   // Create PAUSE button
   const PauseButton = document.createElement('img')
   PauseButton.setAttribute('style', 'position: absolute; width: 35; height: 35; cursor: pointer; margin: auto; top: 0; left: 0; bottom: 0; right: 0;')
@@ -373,6 +381,7 @@ function CLICKmusic() {
   }
   // Add stuff to the BOX
   ButtonHolder.appendChild(PauseButton)
+  MusicPopup.appendChild(PlayingTEXT)
   MusicPopup.appendChild(DurationTEXT)
   MusicPopup.appendChild(ButtonHolder)
   MusicPopup.appendChild(ExitButton)
@@ -381,13 +390,24 @@ function CLICKmusic() {
 }
 
 function MusicStatus() {
-  let SongSeconds = Math.round(document.getElementById('SongsAudio').currentTime)
-  let SongMinutes
-  for(SongMinutes = 0; SongMinutes < 1e2; SongMinutes++) {
-    if(SongSeconds < 60) break
-    SongSeconds -= 60
+  const SongSeconds = GetMinutes(Math.round(document.getElementById('SongsAudio').currentTime))
+  const TotalSeconds = GetMinutes(Math.round(document.getElementById('SongsAudio').duration))
+
+  document.getElementById('DurationTEXT').innerHTML = SongSeconds + ' / ' + TotalSeconds
+  if(document.getElementById('SongsAudio').ended) { PlayNewSong() }
+}
+
+function GetMinutes(Seconds) {
+  let Minutes
+  for(Minutes = 0; Minutes < 1e2; Minutes++) {
+    if(Seconds < 60) break
+    Seconds -= 60
   }
   let zero = ''
-  if(SongSeconds < 10) zero = '0'
-  document.getElementById('DurationTEXT').innerHTML = SongMinutes + ':' + zero + SongSeconds
+  if(Seconds < 10) zero = '0'
+  return Minutes + ':' + zero + Seconds
+}
+
+function PlayNewSong() {
+
 }
