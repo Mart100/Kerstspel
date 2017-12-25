@@ -82,10 +82,7 @@ function MaakSleepBaar() {
   for(let i = 0; i < 50; i++) {
     if(document.getElementById('kerstbal - ' + i) !== null) {
       const kerstbal = document.getElementById('kerstbal - ' + i)
-      kerstbal.onmousedown = function() { 
-        MouseDown(kerstbal)
-        console.log('MovingStart')
-      }
+      kerstbal.onmousedown = function() { MouseDown(kerstbal) }
     }
   }
   // SleepBaar voor slingers
