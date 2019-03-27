@@ -1,0 +1,131 @@
+#background {
+  position: absolute;
+  left: 7%;
+  height: 100%;
+  width: 85%;
+  z-index: 0;
+}
+#decorateText {
+  text-align: center;
+  font-size: 40px;
+  position: absolute;
+  width: 100%;
+  color: yellow;
+}
+#sled {
+  z-index: 0;
+  position: absolute;
+  left: 150;
+  top: 90;
+  height: 70;
+  transform: scaleX(-1);
+}
+#snowAnimation {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+/* Music */
+#MUSICpopup {
+  position: absolute;
+  right: 10%;
+  bottom: 50%;
+  top: 20%;
+  left: -80%;
+  border-radius: 10px;
+  background-color: white;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+#MUSICexit {
+  position: absolute;
+  right: 0;
+  top: 0;
+  border-radius: 10px;
+  width: 35;
+  height: 35;
+  cursor:
+  pointer;
+}
+#MUSICduration {
+  position: absolute;
+  top: 40px;
+  left: 5px;
+  font-size: 30px;
+}
+#MUSICplayingText {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  font-size: 20px;
+}
+#MUSICbuttonHolder {
+  position: absolute;
+  bottom: 5%;
+  left: 5%;
+  right: 5%;
+  height: 50;
+  border-radius: 10px;
+  background-color: #dbecff;
+}
+#MUSICbuttonPAUSE {
+  position: absolute;
+  width: 35;
+  height: 35;
+  cursor: pointer;
+  margin: auto;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+/* Translate */
+#TRANSLATEpopup {
+  padding: 20px;
+  position: absolute;
+  right: 10%;
+  bottom: 50%;
+  top: 20%;
+  left: -80%;
+  border-radius: 10px;
+  background-color: white;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+#TRANSLATEexit {
+  position: absolute;
+  right: 0;
+  top: 0;
+  border-radius: 10px;
+  width: 35;
+  height: 35;
+  cursor:
+  pointer;
+}
+#TRANSLATElanguage {
+  background-color: #dbecff;
+  padding: 2px;
+  border-radius: 5px;
+  font-size: 150%;
+  margin: 10px;
+  cursor: pointer;
+}
+/* All buttons */
+#BUTTONsnow {
+  position: absolute;
+  left: 20%;
+  bottom: 5%;
+  width: 100;
+  height: 100;
+  cursor: pointer;
+  border-radius: 20%;
+  background-color: white;
+}
+#BUTTONtranslate {
+  position: absolute;
+  left: 20%;
+  bottom: 65%;
+  width: 100;
+  height: 100;
+  cursor: pointer;
+  border-radius: 20%;
+  background-color: yellow;
+}

@@ -4,36 +4,134 @@ let WidthStop
 let ForwardKerstslee = true
 const ScreenWidth = window.innerWidth
 const ScreenHeight = window.innerHeight
+const texts = {
+  'current': 'english',
+  'english': {
+    'DecorateText': 'Decorate your own Christmas tree!',
+  },
+  'nederlands': {
+    'DecorateText': 'Versier je eigen kerstboom!'
+  }
+}
+const Sled = {
+  element() {
+    return document.getElementById('sled')
+  },
+  start() {
+    //document.getElementById('body').appendChild(Sled.element())
+    setInterval(function() {
+    Sled.move()
+      }, 1)
+  },
+  move() {
+    let SledE = Sled.element()
+    WidthStop = ScreenWidth - ScreenWidth / 5
+    if(XposKerstslee > WidthStop) {
+      SledE.style.transform = 'scaleX(1)'
+      ForwardKerstslee = false
+    }
+    if(XposKerstslee < 150) {
+      XposKerstslee = 150
+      SledE.style.transform = 'scaleX(-1)'
+      ForwardKerstslee = true
+    }
+    if(ForwardKerstslee) XposKerstslee = XposKerstslee + 1
+    if(!ForwardKerstslee) XposKerstslee = XposKerstslee - 1
+    SledE.style.left = XposKerstslee
+  }
+}
+const SideButtons = {
+  setup() {
+    $('#BUTTONsnow').click(function() { SideButtons.snow.click()})
+    $('#BUTTONmusic').click(function() { SideButtons.music.click()})
+    $('#BUTTONtranslate').click(function() { SideButtons.translate.click()})
+  },
+  'snow': {
+    click() {
+      $('#snowAnimation').toggle()
+    }
+  },
+  'music': {
+    click() {
+      SideButtons.music.createPopup()
+      setInterval(function() { SideButtons.music.status() }, 1000)
+    },
+    createPopup() {
+      const Music = document.getElementById('Songs')
+      // Create BOX for music edit
+      $('#RightPanel').append('<div id="MUSICpopup"></div>')
+      // Create Exit button
+      $('#MUSICpopup').append('<img id="MUSICexit" src="Assets/Icons/Exit.png"/>')
+      $('#MUSICexit').on('click', function() { SideButtons.music.removePopup() })
+
+      // Creates Duration Text
+      $('#MUSICpopup').append('<div id="MUSICduration">0:00</div>')
+
+      // Create Playing text
+      $('#MUSICpopup').append(`<a id="MUSICplayingText">Playing: ${Storage.music.CurrentSong.split('-')[1]}</a>`)
+      // Create BUTTON holder
+      $('#MUSICpopup').append('<div id="MUSICbuttonHolder"></div>')
+      // Create PAUSE button
+      $('#MUSICbuttonHolder').append('<img id="MUSICbuttonPAUSE"/>')
+      if(Storage.music.OnPause) $('#MUSICbuttonPAUSE').attr('src', 'Assets/Icons/Music/Play.png')
+      if(!Storage.music.OnPause) $('#MUSICbuttonPAUSE').attr('src', 'Assets/Icons/Music/Pause.png')
+      //PauseButton.onmouseover = function() { PauseButton.style.width = 38; PauseButton.style.height = 38 }
+      //PauseButton.onmouseleave = function() { PauseButton.style.width = 35; PauseButton.style.height = 35 }
+      $('#MUSICbuttonPAUSE').on('click', function() {
+        if(Storage.music.OnPause) {
+          Storage.music.OnPause = false
+          $('#MUSICbuttonPAUSE').attr('src', 'Assets/Icons/Music/Pause.png')
+          document.getElementById('SongsAudio').play()
+
+        } else {
+          Storage.music.OnPause = true
+          $('#MUSICbuttonPAUSE').attr('src', 'Assets/Icons/Music/Play.png')
+          document.getElementById('SongsAudio').pause()
+        }
+      })
+    },
+    removePopup() {
+      $('#MUSICpopup').remove()
+    },
+    status() {
+      const SongSeconds = GetMinutes(Math.round(document.getElementById('SongsAudio').currentTime))
+      const TotalSeconds = GetMinutes(Math.round(document.getElementById('SongsAudio').duration))
+      $('#MUSICduration').html(SongSeconds + ' / ' + TotalSeconds)
+      if(document.getElementById('SongsAudio').ended) { PlayNewSong() }
+    }
+  },
+  'translate': {
+    click() {
+      SideButtons.translate.createPopup()
+    },
+    switchTo(to) {
+      $('#decorateText').html(texts[to].DecorateText)
+    },
+    createPopup() {
+      // Create BOX
+      $('#RightPanel').append('<div id="TRANSLATEpopup"></div>')
+      // Create Exit button
+      $('#TRANSLATEpopup').append('<img id="TRANSLATEexit" src="Assets/Icons/Exit.png"/>')
+      $('#TRANSLATEexit').on('click', function() { SideButtons.translate.removePopup() })
+      // Create languages
+      for(lang in texts) {
+        if(lang == 'current') continue
+        $('#TRANSLATEpopup').append(`<div id="TRANSLATElanguage" class="TRANSLATE${lang}">${lang}</div>`)
+        $(`.TRANSLATE${lang}`).on('click', function() { SideButtons.translate.switchTo($(this).html())})
+      }
+    },
+    removePopup() {
+      $('#TRANSLATEpopup').remove()
+    }
+  }
+}
 function Scripts() {
+  SideButtons.setup()
   MaakSleepBaar()
-  KerstsleeStart()
+  Sled.start()
   document.getElementById('kerstbal - 0').oncontextmenu = function() { OpenMenu(document.getElementById('kerstbal - 0')) }
   document.addEventListener('contextmenu', event => event.preventDefault());
 
-}
-
-function KerstsleeStart() {
-  const Kerstslee = document.getElementById('Kerstslee')
-  document.getElementById('body').appendChild(Kerstslee)
-  setInterval(function() {
-  MoveKerstslee(Kerstslee)
-    }, 1)
-}
-
-function MoveKerstslee(Kerstslee) {
-  WidthStop = ScreenWidth - ScreenWidth / 5
-  if(XposKerstslee > WidthStop) {
-    Kerstslee.style.transform = 'scaleX(1)'
-    ForwardKerstslee = false
-  }
-  if(XposKerstslee < 150) {
-    XposKerstslee = 150
-    Kerstslee.style.transform = 'scaleX(-1)'
-    ForwardKerstslee = true
-  }
-  if(ForwardKerstslee) XposKerstslee = XposKerstslee + 1
-  if(!ForwardKerstslee) XposKerstslee = XposKerstslee - 1
-  Kerstslee.style.left = XposKerstslee
 }
 
 function OnItemMove(item, left, top) {
@@ -112,16 +210,6 @@ function Move(item, offsetX, offsetY) {
   item.style.left = event.clientX - offsetX
   item.style.top = event.clientY - offsetY
   item.draggable = false
-}
-
-function CLICKsnow() {
-  const SneeuwKnop = document.getElementById('SneeuwKnop')
-  const SneeuwAnimatie = document.getElementById('SneeuwAnimatie')
-  if(window.getComputedStyle(SneeuwAnimatie, null)['display'] == 'none') {
-   SneeuwAnimatie.setAttribute('style', 'position: absolute; width: 100%; height: 100%; Display: block;')
- } else {
-  SneeuwAnimatie.setAttribute('style', 'position: absolute; width: 100%; height: 100%; Display: none;')
- }
 }
 
 function OpenMenu(item) {
@@ -239,7 +327,6 @@ function ChanceSizeKerstbal(item, Ypos, Xpos) {
     RCsizemenu.appendChild(RCmenubuttons)
   }
   document.getElementById('body').appendChild(RCsizemenu)
-  console.log('hi')
 }
 
 function SetItemSize(item, size) {
@@ -324,79 +411,14 @@ function CLICKday() {
   console.log(Storage.buttons.daySwitch.on)
   if(Storage.buttons.daySwitch.on) {
     Storage.buttons.daySwitch.on = false
-    document.getElementById('KerstboomAchtergrond').src = 'Assets/Backgrounds/Night.jpg'
+    document.getElementById('background').src = 'Assets/Backgrounds/Night.jpg'
     document.getElementById('DagKnop').src = 'Assets/Icons/Sun.png'
   }
   else {
     Storage.buttons.daySwitch.on = true
-    document.getElementById('KerstboomAchtergrond').src = 'Assets/Backgrounds/Day.png'
+    document.getElementById('background').src = 'Assets/Backgrounds/Day.png'
     document.getElementById('DagKnop').src = 'Assets/Icons/Moon.png'
   }
-}
-
-function CLICKmusic() {
-  const Music = document.getElementById('Songs')
-  // Create BOX for music edit
-  const MusicPopup = document.createElement('div')
-  MusicPopup.setAttribute('style', 'position: absolute; right: 10%; bottom: 50%; top: 20%; left: -80%; border-radius: 10px; background-color: white; box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);')
-
-  // Create Exit button
-  const ExitButton = document.createElement('img')
-  ExitButton.src = 'Assets/Icons/Exit.png'
-  ExitButton.setAttribute('style', 'position: absolute; right: 0; top: 0; border-radius: 10px; width: 35; height: 35; cursor: pointer;')
-  ExitButton.onclick = function() { MusicPopup.parentNode.removeChild(MusicPopup)}
-
-  // Creates Duration Text
-  const DurationTEXT = document.createElement('a')
-  DurationTEXT.setAttribute('style', 'position: absolute; top: 40px; left: 5px; font-size: 30px;')
-  DurationTEXT.innerHTML = '0:00'
-  DurationTEXT.id = 'DurationTEXT'
-
-  // Create Playing text
-  const PlayingTEXT = document.createElement('a')
-  PlayingTEXT.setAttribute('style', 'position: absolute; top: 5px; left: 5px; font-size: 20px;')
-  PlayingTEXT.innerHTML = 'Playing: ' + Storage.music.CurrentSong.split('-')[1]
-  PlayingTEXT.id = 'PlayingTEXT'
-
-  // Create BUTTON holder
-  const ButtonHolder = document.createElement('div')
-  ButtonHolder.setAttribute('style', 'position: absolute; bottom: 5%; left: 5%; right: 5%; height: 50; border-radius: 10px; background-color: #dbecff')
-
-  // Create PAUSE button
-  const PauseButton = document.createElement('img')
-  PauseButton.setAttribute('style', 'position: absolute; width: 35; height: 35; cursor: pointer; margin: auto; top: 0; left: 0; bottom: 0; right: 0;')
-  if(Storage.music.OnPause) PauseButton.src = 'Assets/Icons/Music/Play.png'
-  if(!Storage.music.OnPause) PauseButton.src = 'Assets/Icons/Music/Pause.png'
-  PauseButton.onmouseover = function() { PauseButton.style.width = 38; PauseButton.style.height = 38 }
-  PauseButton.onmouseleave = function() { PauseButton.style.width = 35; PauseButton.style.height = 35 }
-  PauseButton.onclick = function() {
-    if(Storage.music.OnPause) {
-      Storage.music.OnPause = false
-      PauseButton.src = 'Assets/Icons/Music/Pause.png'
-      document.getElementById('SongsAudio').play()
-
-    } else {
-      Storage.music.OnPause = true
-      PauseButton.src = 'Assets/Icons/Music/Play.png'
-      document.getElementById('SongsAudio').pause()
-    }
-  }
-  // Add stuff to the BOX
-  ButtonHolder.appendChild(PauseButton)
-  MusicPopup.appendChild(PlayingTEXT)
-  MusicPopup.appendChild(DurationTEXT)
-  MusicPopup.appendChild(ButtonHolder)
-  MusicPopup.appendChild(ExitButton)
-  document.getElementById('RightPanel').appendChild(MusicPopup)
-  setInterval(MusicStatus, 500)
-}
-
-function MusicStatus() {
-  const SongSeconds = GetMinutes(Math.round(document.getElementById('SongsAudio').currentTime))
-  const TotalSeconds = GetMinutes(Math.round(document.getElementById('SongsAudio').duration))
-
-  document.getElementById('DurationTEXT').innerHTML = SongSeconds + ' / ' + TotalSeconds
-  if(document.getElementById('SongsAudio').ended) { PlayNewSong() }
 }
 
 function GetMinutes(Seconds) {

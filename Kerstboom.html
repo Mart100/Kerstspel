@@ -1,23 +1,26 @@
 <html>
   <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="main.css">
     <script src="Scripts.js"></script>
   </head>
   <body style="margin: 0;" onload="Scripts();" id="body" onclick="RemoveRCmenu()">
-    <img src="Assets/Backgrounds/Day.png" alt="KerstboomAchtergrond" style="position: absolute; left: 7%; height:100%; width: 85%;" id="KerstboomAchtergrond"/>
-    <h1 style="text-align: center; font-size: 40px; position: absolute; width: 100%; color: yellow;" id="test">Versier je eigen kerstboom!</h1>
-    <img src="Assets/Overig/Kerstslee.gif" style="position: absolute; left: 150; top: 90; width: 200; height: 70; border-radius: 20%; transform: scaleX(-1);" id="Kerstslee"/>
+    <img src="Assets/Backgrounds/Day.png" id="background"/>
+    <h1 id="decorateText">Versier je eigen kerstboom!</h1>
+    <img src="Assets/Overig/Kerstslee.gif" id="sled"/>
     <img src="https://gyazo.com/a64897e3f9846222160003272e2282c0.png" alt="Kerstboom" style="position: absolute; left: 7%; height:100%; width: 85%;" id="Kerstboom"/>
-    <img src="https://media.giphy.com/media/lDKVeTHWDPSuc/giphy.gif" alt="Falling snow" style="position: absolute; width: 100%; height: 100%; Display: none;" id="SneeuwAnimatie"/>
+    <img id="snowAnimation" src="https://media.giphy.com/media/lDKVeTHWDPSuc/giphy.gif"/>
     <audio id="SongsAudio"><source src="Assets/Music/1-JingleBells.mp3" type="audio/mpeg" id="Songs"></audio>
     <div style="position: absolute; left: 0; width: 150px; height: 100%; background-color: #eaeaea" id="LeftPanel">
       <img src="https://gyazo.com/78287b22af92bded0feb779cea167727.png" style="position: absolute; left: 15%; top: 2%; width: 100; height: 100; cursor: move; user-drag: none;" id="kerstbal - 0" contextmenu=""/>
       <img src="https://gyazo.com/9c637de06cbd7bade0f086c38cc03e6d.png" style="position: absolute; left: 15%; top: 15%; width: 100; height: 100; cursor: move; user-drag: none;" id="slinger - 0" contextmenu=""/>
     </div>
     <div style="position: absolute; right: 0; width: 150px; height: 100%; background-color: #eaeaea" id="RightPanel">
-      <img src="Assets/Icons/Music.png" style="position: absolute; left: 20%; bottom: 50%; width: 100; height: 100; cursor: pointer; border-radius: 20%;" id="musicKnop" onclick="CLICKmusic()"/>
-      <img src="Assets/Icons/Moon.png" style="position: absolute; left: 20%; bottom: 35%; width: 100; height: 100; cursor: pointer; border-radius: 20%; background-color: white;" id="DagKnop" onclick="CLICKday()"/>
-      <img src="http://www.sweet16feest.nl/wp-content/uploads/2015/10/sneeuwvlokwit.jpg" style="position: absolute; left: 20%; bottom: 5%; width: 100; height: 100; cursor: pointer; border-radius: 20%; background-color: white;" id="SneewKnop" onclick="CLICKsnow()"/>
+      <img src="Assets/Icons/Music.png" style="position: absolute; left: 20%; bottom: 50%; width: 100; height: 100; cursor: pointer; border-radius: 20%;" id="BUTTONmusic"/>
+      <img id="DagKnop" src="Assets/Icons/Moon.png" style="position: absolute; left: 20%; bottom: 35%; width: 100; height: 100; cursor: pointer; border-radius: 20%; background-color: white;" onclick="CLICKday()"/>
+      <img id="BUTTONsnow" src="http://www.sweet16feest.nl/wp-content/uploads/2015/10/sneeuwvlokwit.jpg"/>
       <img src="https://gyazo.com/506a98d747d734a0aff5661ec4eef00f.png" style="position: absolute; left: 20%; bottom: 20%; width: 100; height: 100; cursor: pointer; border-radius: 20%;" id="LichtKnop" onclick="CLICKlight()"/>
+        <img id="BUTTONtranslate" src="Assets/Icons/Translate.png"/>
     </div>
   </body>
 </html>
